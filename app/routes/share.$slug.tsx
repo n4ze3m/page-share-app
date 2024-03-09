@@ -41,7 +41,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 }
 
 export default function Index() {
-  const { title, created_at, messages } = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
 
   return (
     <div className="isolate">
@@ -76,14 +76,14 @@ export default function Index() {
           <div className="mx-auto max-w-4xl p-6 lg:px-8">
             <div className="border-b border-gray-500 pb-4 pt-3 sm:mb-2 sm:pb-6 sm:pt-8">
               <h1 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
-                {title}
+                {data?.title}
               </h1>
               <div className="pt-3 text-base text-gray-400 sm:pt-4">
-                <p>{new Date(created_at).toLocaleString()}</p>
+                <p>{new Date(data?.created_at).toLocaleString()}</p>
               </div>
             </div>
 
-            <Messages messages={(messages as any[]) || []} />
+            <Messages messages={(data?.messages as any[]) || []} />
           </div>
         </div>
       </div>

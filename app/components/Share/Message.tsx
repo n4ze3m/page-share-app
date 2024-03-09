@@ -1,4 +1,3 @@
-import { Image } from "antd";
 import Markdown from "../Common/Markdown";
 
 type Props = {
@@ -36,7 +35,7 @@ export const Message: React.FC<Props> = (props) => {
                 {props.images
                   .filter((image) => image.length > 0)
                   .map((image, index) => (
-                    <Image
+                    <img
                       key={index}
                       src={image}
                       alt="Uploaded Image"

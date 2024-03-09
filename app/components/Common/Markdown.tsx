@@ -5,7 +5,6 @@ import remarkMath from "remark-math";
 import ReactMarkdown from "react-markdown";
 import "property-information";
 import React from "react";
-import { Tooltip } from "antd";
 import { CheckIcon, ClipboardIcon } from "lucide-react";
 import { nightOwl } from "./styles";
 
@@ -29,24 +28,22 @@ export default function Markdown({ message }: { message: string }) {
                   </span>
 
                   <div className="flex items-center">
-                    <Tooltip title="Copy to clipboard">
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(children[0] as string);
-                          setIsBtnPressed(true);
-                          setTimeout(() => {
-                            setIsBtnPressed(false);
-                          }, 4000);
-                        }}
-                        className="flex gap-1.5 items-center rounded bg-none p-1 text-xs text-gray-200 hover:bg-gray-700 hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                      >
-                        {!isBtnPressed ? (
-                          <ClipboardIcon className="h-4 w-4" />
-                        ) : (
-                          <CheckIcon className="h-4 w-4 text-green-400" />
-                        )}
-                      </button>
-                    </Tooltip>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(children[0] as string);
+                        setIsBtnPressed(true);
+                        setTimeout(() => {
+                          setIsBtnPressed(false);
+                        }, 4000);
+                      }}
+                      className="flex gap-1.5 items-center rounded bg-none p-1 text-xs text-gray-200 hover:bg-gray-700 hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                    >
+                      {!isBtnPressed ? (
+                        <ClipboardIcon className="h-4 w-4" />
+                      ) : (
+                        <CheckIcon className="h-4 w-4 text-green-400" />
+                      )}
+                    </button>
                   </div>
                 </div>
                 <SyntaxHighlighter
