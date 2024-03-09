@@ -13,7 +13,7 @@ It's easy to get started. Here's how you can do it.
 
 Click the button below to deploy the code to Railway.
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/VbiS2Q?referralCode=olbszX)
 
 
 ### Local Development
