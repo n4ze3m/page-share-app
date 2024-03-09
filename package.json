@@ -8,7 +8,7 @@
     "dev": "remix dev --manual",
     "setup": "prisma generate && prisma migrate deploy",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-    "start": "remix-serve ./build/index.js",
+    "start": "npm run setup && remix-serve ./build/index.js",
     "typecheck": "tsc"
   },
   "dependencies": {
