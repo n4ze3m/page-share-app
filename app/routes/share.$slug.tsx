@@ -78,9 +78,6 @@ export default function Index() {
               <h1 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
                 {data?.title}
               </h1>
-              <div className="pt-3 text-base text-gray-400 sm:pt-4">
-                <p>{new Date(data?.created_at).toLocaleString()}</p>
-              </div>
             </div>
 
             <Messages messages={(data?.messages as any[]) || []} />
