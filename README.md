@@ -1,38 +1,36 @@
-# Welcome to Remix!
+# Page Assist 
 
-- [Remix Docs](https://remix.run/docs)
 
-## Development
+Self host the page assist share fuctionality to your own server. 
 
-From your terminal:
 
-```sh
-npm run dev
+## Getting Started
+
+
+It's easy to get started. Here's how you can do it.
+
+### Railway
+
+Click the button below to deploy the code to Railway.
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=)
+
+
+### Local Development
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/n4ze3m/page-assist-app.git
+cd page-assist-app
 ```
 
-This starts your app in development mode, rebuilding assets on file changes.
+2. Run the server
 
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
+```bash
+docker compose up
 ```
 
-Then run the app in production mode:
+3. Open the app
 
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`
+Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
