@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  pageassist:
+    container_name: page-assist
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pageshare
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+  postgres:
+    container_name: page-assist-db
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pageshare
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    
