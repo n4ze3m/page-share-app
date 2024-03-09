@@ -3,6 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { Header } from "~/components/Common/Header";
 import { Messages } from "~/components/Share/Messages";
 import { prisma } from "~/db.server";
+import { ClientOnly } from "remix-utils/client-only";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -82,7 +83,7 @@ export default function Index() {
               </div>
             </div>
 
-            <Messages messages={messages as any[]} />
+            <Messages messages={(messages as any[]) || []} />
           </div>
         </div>
       </div>

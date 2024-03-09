@@ -22,7 +22,6 @@ export const Messages: React.FC<Props> = ({ messages }) => {
           isBot={message.isBot}
         />
       ))}
-      
     </div>
   );
 };
