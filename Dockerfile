@@ -21,6 +21,8 @@ RUN npm prune --omit=dev
 
 FROM base
 
+RUN apt-get update -y && apt-get install -y openssl && apt-get clean
+
 COPY --from=build /app /app
 EXPOSE 3000
 CMD [ "npm", "run", "start" ]
