@@ -74,12 +74,11 @@ export default function Index() {
       <div className="flex flex-col mt-14 sm:mt-6 max-h-screen">
         <div className="flex-grow flex-1">
           <div className="mx-auto max-w-4xl p-6 lg:px-8">
-            <div className="border-b border-gray-500 pb-4 pt-3 sm:mb-2 sm:pb-6 sm:pt-8">
-              <h1 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+            <div className="border-b dark:border-gray-500 pb-4 pt-3 sm:mb-2 sm:pb-6 sm:pt-8">
+              <h1 className="text-3xl font-semibold line-clamp-1 leading-tight dark:text-white sm:text-4xl">
                 {data?.title}
               </h1>
             </div>
-
             <Messages messages={(data?.messages as any[]) || []} />
           </div>
         </div>

@@ -13,7 +13,7 @@ export const Header = () => {
             className="focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-700 flex items-center"
           >
             <img className="h-6 w-auto" src="/logo.png" alt="Page Assist" />
-            <span className="ml-1  text-white text-xl font-bold">
+            <span className="ml-1  dark:text-white text-xl font-bold">
               Page Assist
             </span>
           </Link>
