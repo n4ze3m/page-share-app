@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "remix vite:dev",
     "build": "remix vite:build",
-    "start": "remix-serve ./build/server/index.js",
-    "setup": "prisma generate && prisma migrate deploy",
+    "start": "prisma generate && prisma migrate deploy && remix-serve ./build/server/index.js",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "typecheck": "tsc"
   },
