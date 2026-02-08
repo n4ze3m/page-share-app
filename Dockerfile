@@ -1,6 +1,4 @@
-ARG NODE_VERSION=18.17.1
-
-FROM node:18.17.1-slim as base
+FROM node:22-slim as base
 
 WORKDIR /app
 
@@ -13,13 +11,11 @@ RUN apt-get update -qq && \
 
 COPY package-lock.json package.json ./
 
-RUN npm ci --include=dev
+RUN npm install
 
 COPY . .
 
 RUN npm run build
-
-RUN npm prune --omit=dev
 
 FROM base
 
