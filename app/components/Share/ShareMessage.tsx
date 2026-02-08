@@ -3,6 +3,7 @@ import { Collapse } from "../Common/Collapse";
 import { removeModelSuffix } from "~/utils/removeModelSuffix";
 import { humanizeMilliseconds } from "~/utils/humanize-milliseconds";
 import { parseReasoning } from "~/lib/reasoning";
+import { useState } from "react";
 
 type Props = {
   message: string;
@@ -17,13 +18,17 @@ type Props = {
   sources?: any[];
 };
 
+const MAX_MESSAGE_LENGTH = 500;
+
 export const ShareMessage = (props: Props) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   return (
-    <div className="group relative flex w-full flex-col items-end justify-center pb-2 md:px-4 text-gray-800 dark:text-gray-100">
-      <div className="flex flex-row gap-4 md:gap-6 my-2 m-auto w-full">
-        <div className="w-8 flex flex-col relative items-end">
-          {props.isBot ? (
-            !props.modelImage ? (
+    <div className={`group relative flex w-full flex-col pb-2 md:px-4 text-gray-800 dark:text-gray-100 ${!props.isBot ? 'items-end' : 'items-start'}`}>
+      <div className={`flex flex-row gap-4 md:gap-6 my-2 ${props.isBot ? 'w-full' : ''}`}>
+        {props.isBot && (
+          <div className="w-8 flex flex-col relative items-end">
+            {!props.modelImage ? (
               <div className="relative h-7 w-7 p-1 rounded-sm text-white flex items-center justify-center text-opacity-100">
                 <div className="absolute h-8 w-8 rounded-full bg-gradient-to-r from-green-300 to-purple-400"></div>
               </div>
@@ -33,29 +38,25 @@ export const ShareMessage = (props: Props) => {
                 alt={props.name}
                 className="h-8 w-8 rounded-full object-cover"
               />
-            )
-          ) : (
-            <div className="relative h-7 w-7 p-1 rounded-sm text-white flex items-center justify-center text-opacity-100">
-              <div className="absolute h-8 w-8 rounded-full from-blue-400 to-blue-600 bg-gradient-to-r"></div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
-        <div className="flex w-[calc(100%-50px)] flex-col gap-2 lg:w-[calc(100%-115px)]">
-          <span className="text-xs font-bold text-gray-800 dark:text-white">
-            {props.isBot
-              ? props.name === "chrome::gemini-nano::page-assist"
+        <div className={`flex flex-col gap-2 ${props.isBot ? 'w-[calc(100%-50px)] lg:w-[calc(100%-115px)]' : ''}`}>
+          {props.isBot && (
+            <span className="text-xs font-bold text-gray-800 dark:text-white">
+              {props.name === "chrome::gemini-nano::page-assist"
                 ? "Gemini Nano"
                 : removeModelSuffix(
                     `${props?.modelName || props?.name}`?.replaceAll(
                       /accounts\/[^\/]+\/models\//g,
                       "",
                     ),
-                  )
-              : "You"}
-          </span>
+                  )}
+            </span>
+          )}
 
-          <div className="flex flex-grow flex-col">
+          <div className={`flex flex-col ${props.isBot ? 'flex-grow' : 'items-end'}`}>
             {props.isBot ? (
               <>
                 {parseReasoning(props.message).map((e: any, i: any) => {
@@ -84,14 +85,38 @@ export const ShareMessage = (props: Props) => {
                 })}
               </>
             ) : (
-              <p
-                className={`prose dark:prose-invert whitespace-pre-line prose-p:leading-relaxed prose-pre:p-0 dark:prose-dark ${
-                  props.message_type &&
-                  "italic text-gray-500 dark:text-gray-400 text-sm"
-                }`}
-              >
-                {props.message}
-              </p>
+              <div className="block max-w-[70%] bg-gray-50 dark:bg-[#2a2a2a] rounded-2xl px-5 py-3.5 border border-gray-100 dark:border-gray-700/50">
+                {props.message.length > MAX_MESSAGE_LENGTH && !isExpanded ? (
+                  <>
+                    <div className="relative">
+                      <div className="text-sm">
+                        <Markdown message={props.message.slice(0, MAX_MESSAGE_LENGTH) + "..."} />
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-gray-50 dark:from-[#2a2a2a] to-transparent pointer-events-none" />
+                    </div>
+                    <button
+                      onClick={() => setIsExpanded(true)}
+                      className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs mt-3 block font-medium hover:underline transition-all"
+                    >
+                      Show more
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div className="text-sm">
+                      <Markdown message={props.message} />
+                    </div>
+                    {props.message.length > MAX_MESSAGE_LENGTH && isExpanded && (
+                      <button
+                        onClick={() => setIsExpanded(false)}
+                        className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs mt-3 block font-medium hover:underline transition-all"
+                      >
+                        Show less
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
             )}
           </div>
 

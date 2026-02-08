@@ -28,7 +28,7 @@ type Props = {
 
 export const Messages: React.FC<Props> = ({ messages }) => {
   return (
-    <div className="flex flex-col mt-8 gap-2 items-start justify-start">
+    <div className="flex flex-col mt-8 gap-2">
       {messages.map((message, index) => (
         <ShareMessage
           key={message.id || `message-${index}`}
