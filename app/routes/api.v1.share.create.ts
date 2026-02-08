@@ -1,5 +1,7 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
-import { prisma } from "~/db.server";
+import { type ActionFunctionArgs, data } from "react-router";
+import { db } from "~/db/client.server";
+import { chat } from "~/db/schema";
+import { createId } from '@paralleldrive/cuid2';
 
 type CreateBody = {
     title: string;
@@ -12,7 +14,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const { title, messages, owner_id } = body;
 
     if (!title || !messages || !owner_id) {
-        return json({ message: "Missing required fields" }, {
+        return data({ message: "Missing required fields" }, {
             status: 400,
             headers: {
                 "Access-Control-Allow-Origin": "*",
@@ -21,7 +23,7 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     if (messages.length === 0) {
-        return json({ message: "Messages cannot be empty" }, {
+        return data({ message: "Messages cannot be empty" }, {
             status: 400,
             headers: {
                 "Access-Control-Allow-Origin": "*",
@@ -29,17 +31,19 @@ export async function action({ request }: ActionFunctionArgs) {
         });
     }
 
-    const newChat = await prisma.chat.create({
-        data: {
-            messages,
-            owner_id,
-            title,
-        }
+    const [newChat] = await db.insert(chat).values({
+        id: createId(),
+        ownerId: owner_id,
+        messages,
+        title,
+    }).returning({
+        id: chat.id,
+        title: chat.title,
     });
 
     // const url = new URL(request.url);
 
-    return json({
+    return data({
         chat_id: newChat.id,
         title: newChat.title,
     }, {

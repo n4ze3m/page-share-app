@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import { Header } from "../Common/Header";
 import {ChromeIcon} from "lucide-react";
 
@@ -11,23 +11,23 @@ export const Hero = () => {
           <div className="py-24 sm:py-32 lg:pb-40">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <div className="mx-auto max-w-2xl text-center">
-                <h1 className="text-2xl font-bold tracking-tight dark:text-neutral-300 sm:text-6xl">
-                  A <span className="text-indigo-600">Sidebar & Web UI</span>{" "}
+                <h1 className="text-4xl font-bold tracking-tight dark:text-neutral-300 sm:text-6xl lg:text-7xl">
+                  A <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Sidebar & Web UI</span>{" "}
                   for your Local AI.
                 </h1>
-                <p className="mt-6 text-lg leading-8 text-gray-500 dark:text-gray-400">
+                <p className="mt-8 text-lg leading-8 text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
                   Page Assist is an open-source Browser Extension that provides a
                   Sidebar and Web UI for your Local AI model. It allows you to
                   interact with your model from any webpage.
                 </p>
-                <div className="mt-10 flex items-center justify-center gap-x-6">
+                <div className="mt-12 flex items-center justify-center gap-x-8">
                   <a
                     href={
                       typeof  window !== 'undefined' && window.navigator.userAgent.includes("Chrome") ? "https://chromewebstore.google.com/detail/page-assist-a-web-ui-for/jfgfiigpkhlkbnfnbobbkinehhfdhndo"
                           : "https://addons.mozilla.org/en-US/firefox/addon/page-assist/"
                     }
                     target="_blank"
-                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="inline-flex items-center rounded-full bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-lg hover:bg-indigo-700 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200"
                   >
                     {typeof window !== 'undefined' && window.navigator.userAgent.includes("Chrome") ? <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +60,7 @@ export const Hero = () => {
                   <a
                       href="https://github.com/n4ze3m/page-assist"
                       target="_blank"
-                      className="inline-flex items-center text-base font-semibold leading-7 dark:text-neutral-300"
+                      className="inline-flex items-center text-base font-semibold leading-7 dark:text-neutral-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
                   >
                     Star on GitHub
                     <svg
@@ -79,7 +79,7 @@ export const Hero = () => {
                 </div>
               </div>
               <iframe
-                className="yt-video relative mx-auto mt-12 w-full max-w-4xl rounded-3xl border border-gray-300 shadow-2xl dark:border-gray-700 lg:mt-20"
+                className="yt-video relative mx-auto mt-12 w-full max-w-4xl rounded-3xl shadow-2xl ring-1 ring-black/5 dark:ring-white/10 lg:mt-20 transition-shadow hover:shadow-indigo-500/20"
                 src="https://www.youtube.com/embed/8VTjlLGXA4s"
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

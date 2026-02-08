@@ -28,8 +28,6 @@ RUN apt-get update -y && apt-get install -y openssl && apt-get clean
 
 COPY --from=build /app /app
 
-RUN npx prisma generate
-
 EXPOSE 3000
 
 CMD ["npm", "run", "start"]

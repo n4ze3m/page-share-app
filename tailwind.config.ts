@@ -3,7 +3,15 @@ import type { Config } from 'tailwindcss'
 export default {
   content: ['./app/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'bottom-mask-light': 'linear-gradient(0deg, transparent 0, #ffffff 160px)',
+        'bottom-mask-dark': 'linear-gradient(0deg, transparent 0, #1a1a1a 160px)',
+      },
+      maskImage: {
+        'bottom-fade': 'linear-gradient(0deg, transparent 0, #000 160px)',
+      }
+    }
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")]
 } satisfies Config

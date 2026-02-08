@@ -1,18 +1,17 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import type { LinksFunction } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import tailwindCSS from "~/css/tailwind.css?url";
+import arimoFont from "~/css/Arimo.ttf";
 
 export const links: LinksFunction = () => [
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   { rel: "stylesheet", href: tailwindCSS },
+  {
+    rel: "preload",
+    href: arimoFont,
+    as: "font",
+    type: "font/ttf",
+    crossOrigin: "anonymous"
+  },
 ];
 
 export default function App() {
