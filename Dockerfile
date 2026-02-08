@@ -1,4 +1,6 @@
-FROM node:22-slim as base
+ARG NODE_VERSION=18.17.1
+
+FROM node:18.17.1-slim as base
 
 WORKDIR /app
 
