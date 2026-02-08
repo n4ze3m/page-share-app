@@ -1,12 +1,12 @@
-ARG NODE_VERSION=18.17.1
+ARG NODE_VERSION=20.18.0
 
-FROM node:18.17.1-slim as base
+FROM node:20.18.0-slim as base
 
 WORKDIR /app
 
-ENV NODE_ENV="production"
-
 FROM base as build
+
+ENV NODE_ENV="development"
 
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
@@ -20,6 +20,8 @@ COPY . .
 RUN npm run build
 
 FROM base
+
+ENV NODE_ENV="production"
 
 RUN apt-get update -y && apt-get install -y openssl && apt-get clean
 
