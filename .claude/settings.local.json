@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:link.springer.com)",
+      "WebFetch(domain:arxiv.org)"
+    ]
+  }
+}

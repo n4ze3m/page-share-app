@@ -2,11 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @font-face {
-    font-family: 'Inter';
-    src: url('./inter.ttf') format('truetype');
+    font-family: 'Arimo';
+    src: url('./Arimo.ttf') format('truetype');
 }
 
 * {
-  font-family: 'Inter', sans-serif !important;
+  font-family: 'Arimo', sans-serif;
 }

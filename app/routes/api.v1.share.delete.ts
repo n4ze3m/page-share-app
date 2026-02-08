@@ -1,5 +1,7 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
-import { prisma } from "~/db.server";
+import { type ActionFunctionArgs, data } from "react-router";
+import { db } from "~/db/client.server";
+import { chat } from "~/db/schema";
+import { eq, and } from "drizzle-orm";
 
 type CreateBody = {
     share_id: string;
@@ -11,7 +13,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const { share_id, owner_id } = body;
 
     if (!share_id || !owner_id) {
-        return json({ message: "Missing required fields" }, {
+        return data({ message: "Missing required fields" }, {
             status: 400,
             headers: {
                 "Access-Control-Allow-Origin": "*",
@@ -21,15 +23,16 @@ export async function action({ request }: ActionFunctionArgs) {
 
 
 
-    const chat = await prisma.chat.findFirst({
-        where: {
-            id: share_id,
-            owner_id: owner_id,
-        }
-    });
+    const [existingChat] = await db.select()
+        .from(chat)
+        .where(and(
+            eq(chat.id, share_id),
+            eq(chat.ownerId, owner_id)
+        ))
+        .limit(1);
 
-    if (!chat) {
-        return json({ message: "Chat not found" }, {
+    if (!existingChat) {
+        return data({ message: "Chat not found" }, {
             status: 404,
             headers: {
                 "Access-Control-Allow-Origin": "*",
@@ -37,13 +40,10 @@ export async function action({ request }: ActionFunctionArgs) {
         });
     }
 
-    await prisma.chat.delete({
-        where: {
-            id: share_id,
-        }
-    })
+    await db.delete(chat)
+        .where(eq(chat.id, share_id))
 
-    return json({
+    return data({
         message: "Chat deleted",
     }, {
         headers: {

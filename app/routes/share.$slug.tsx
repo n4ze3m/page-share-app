@@ -1,14 +1,20 @@
-import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { type LoaderFunctionArgs, type MetaFunction, data } from "react-router";
+import { useLoaderData, isRouteErrorResponse, useRouteError, Link, useNavigation } from "react-router";
 import { Header } from "~/components/Common/Header";
 import { Messages } from "~/components/Share/Messages";
-import { prisma } from "~/db.server";
-import { ClientOnly } from "remix-utils/client-only";
+import { BackgroundGradient } from "~/components/Common/BackgroundGradient";
+import { db } from "~/db/client.server";
+import { chat } from "~/db/schema";
+import { eq } from "drizzle-orm";
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data: loaderData }) => {
   return [
     {
-      title: data?.title,
+      title: loaderData?.title || "Page Assist - Shared Chat",
+    },
+    {
+      name: "description",
+      content: loaderData?.title ? `View shared chat: ${loaderData.title}` : "View shared chat from Page Assist",
     },
   ];
 };
@@ -16,72 +22,115 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const { slug } = params;
 
-  const chat = await prisma.chat.findFirst({
-    select: {
-      created_at: true,
-      messages: true,
-      title: true,
-    },
-    where: {
-      id: slug,
-    },
-  });
+  if (!slug) {
+    throw new Response(null, {
+      status: 400,
+      statusText: "Bad Request",
+    });
+  }
 
-  if (!chat) {
+  const [chatData] = await db
+    .select()
+    .from(chat)
+    .where(eq(chat.id, slug))
+    .limit(1);
+
+  if (!chatData) {
     throw new Response(null, {
       status: 404,
       statusText: "Not Found",
     });
   }
-  return json({
-    title: chat.title,
-    created_at: chat.created_at,
-    messages: chat.messages,
+  return data({
+    title: chatData.title,
+    created_at: chatData.createdAt,
+    messages: chatData.messages,
   });
 }
 
-export default function Index() {
+export function headers() {
+  return {
+    "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
+  };
+}
+
+export default function SharePage() {
   const data = useLoaderData<typeof loader>();
+  const navigation = useNavigation();
+  const isLoading = navigation.state === "loading";
 
   return (
-    <div className="isolate">
-      <div className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]">
-        <svg
-          className="relative left-[calc(50%-5rem)] -z-10 h-[10.5rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-15rem)] sm:h-[21rem]"
-          viewBox="0 0 1155 678"
-        >
-          <path
-            fill="url(#9b2541ea-d39d-499b-bd42-aeea3e93f5ff)"
-            fillOpacity=".3"
-            d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
-          />
-          <defs>
-            <linearGradient
-              id="9b2541ea-d39d-499b-bd42-aeea3e93f5ff"
-              x1="1155.49"
-              x2="-78.208"
-              y1=".177"
-              y2="474.645"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#D0D0D0" />
-              <stop offset={1} stopColor="#A0A0A0" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+    <div className="isolate" style={{ fontFamily: 'Arimo, sans-serif !important' }}>
+      <BackgroundGradient />
       <Header />
       <div className="flex flex-col mt-14 sm:mt-6 max-h-screen">
         <div className="flex-grow flex-1">
           <div className="mx-auto max-w-4xl p-6 lg:px-8">
             <div className="border-b dark:border-gray-500 pb-4 pt-3 sm:mb-2 sm:pb-6 sm:pt-8">
               <h1 className="text-3xl font-semibold line-clamp-1 leading-tight dark:text-white sm:text-4xl">
-                {data?.title}
+                {isLoading ? (
+                  <span className="animate-pulse bg-gray-300 dark:bg-gray-700 rounded h-10 block" />
+                ) : (
+                  data?.title
+                )}
               </h1>
             </div>
-            <Messages messages={(data?.messages as any[]) || []} />
+            {isLoading ? (
+              <div className="space-y-4 mt-6">
+                <div className="animate-pulse bg-gray-300 dark:bg-gray-700 rounded h-20" />
+                <div className="animate-pulse bg-gray-300 dark:bg-gray-700 rounded h-20" />
+              </div>
+            ) : (
+              <Messages messages={(data?.messages as any[]) || []} />
+            )}
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div className="isolate min-h-screen flex items-center justify-center bg-white dark:bg-[#171717]">
+        <div className="text-center px-6">
+          <h1 className="text-6xl font-bold text-gray-900 dark:text-white mb-4">
+            {error.status}
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
+            {error.status === 404
+              ? "This shared chat could not be found."
+              : error.statusText || "Something went wrong"}
+          </p>
+          <Link
+            to="/"
+            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Go back home
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="isolate min-h-screen flex items-center justify-center bg-white dark:bg-[#171717]">
+      <div className="text-center px-6">
+        <h1 className="text-6xl font-bold text-gray-900 dark:text-white mb-4">
+          Oops!
+        </h1>
+        <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
+          An unexpected error occurred.
+        </p>
+        <Link
+          to="/"
+          className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Go back home
+        </Link>
       </div>
     </div>
   );
